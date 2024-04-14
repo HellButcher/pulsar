@@ -1165,7 +1165,7 @@ impl<'s> SharedScheduleExecution<'s> {
 
             if system.is_send() {
                 let resources = resources.as_send(); // shared borrow
-                self::threadpool::spawn(move || {
+                threadpool::spawn(move || {
                     current_wait_group.wait();
                     system.run_send(resources, ());
                     drop(signal_wait_group);
