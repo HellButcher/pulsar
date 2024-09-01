@@ -475,6 +475,13 @@ impl Resources {
             .unwrap()
             .insert_again(removed)
     }
+
+    pub fn clear(&mut self) {
+        self.resources.clear();
+        self.by_type_id.clear();
+        self.meta_by_type_id.clear();
+        self.modules.clear();
+    }
 }
 
 impl Default for Resources {
