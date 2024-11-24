@@ -1,6 +1,7 @@
 use std::time::Instant;
 
 use crossbeam_utils::sync::WaitGroup;
+use fnv::FnvHashMap as HashMap;
 use pulz_bitset::BitSet;
 
 use crate::{
@@ -8,8 +9,6 @@ use crate::{
     resource::{ResourceAccess, Resources},
     system::{ExclusiveSystem, IntoSystemDescriptor, System, SystemDescriptor, SystemVariant},
 };
-
-type HashMap<K, V> = std::collections::HashMap<K, V, fnv::FnvBuildHasher>;
 
 enum TaskGroup {
     // topoligical order of the systems, and the offset (index into this array) where a resource
@@ -1166,7 +1165,7 @@ impl<'s> SharedScheduleExecution<'s> {
 
             if system.is_send() {
                 let resources = resources.as_send(); // shared borrow
-                self::threadpool::spawn(move || {
+                threadpool::spawn(move || {
                     current_wait_group.wait();
                     system.run_send(resources, ());
                     drop(signal_wait_group);
